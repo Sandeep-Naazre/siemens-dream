@@ -6,3 +6,8 @@ echo "where are you from?"
 read -p "place:" place
 
 echo "$name  from $place"
+
+read -p "you like:" like
+
+echo $like
+

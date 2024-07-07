@@ -1,0 +1,20 @@
+node{
+
+def mavenHome = tool name: 'maven build1'
+
+properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([pollSCM('* * * * *')])])
+
+stage('Checkoutcode'){
+git branch: 'development', credentialsId: 'bde6f2f0-fc25-4f8b-8d64-4b21bdc6d75d', url: 'https://github.com/Sandeep-Naazre/maven-web-application.git'
+}
+
+stage('Build'){
+sh "${mavenHome}/bin/mvn clean package"
+}
+
+stage('Deploy war/ear into the container'){
+sshagent(['d2b048c9-90d2-425d-8e1c-4a652c345cad']) {
+  sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@172.31.40.161:/opt/tomcat/webapps"
+}
+}
+}

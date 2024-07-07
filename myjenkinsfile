@@ -1,6 +1,6 @@
 node{
 
-echo "This is scripted file"
+echo "This is scripted file."
 
 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([pollSCM('* * * * *')])])
 

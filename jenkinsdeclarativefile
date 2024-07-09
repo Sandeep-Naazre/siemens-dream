@@ -1,0 +1,35 @@
+pipeline{
+
+agent{label 'nodes'}
+
+
+options {
+  buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
+}
+
+tools{
+  maven 'maven3.8.6'
+}
+
+stages{ 
+  stage('checkoutcode'){
+steps{
+git branch: 'development', url: 'https://github.com/Sandeep-Naazre/maven-web-application.git'
+}
+}
+
+stage('Build'){
+steps{
+sh "mvn clean package"
+}
+}
+
+stage('deploy war in tomcat'){
+steps{
+sshagent(['ec709914-f637-4a28-b554-5eede0e3095d']) {
+    sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.36.234:/opt/tomcat/webapps"
+}
+}
+}
+}
+}
